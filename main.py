@@ -1,5 +1,3 @@
-import re
-
 def validacao(numero): # verifica se o usuário digitou algum número diferente de 0 e 1
     if numero != '0' and numero != '1':
         return True
@@ -10,7 +8,7 @@ def boolean_expression_generator():
                       'C': [0, 1, 0, 1, 0, 1, 0, 1]}
 
     output_values = []
-    linhas_resultado1 = []
+    linhas = []
     boolean_enpression = ''
 
     print("=============================")
@@ -31,13 +29,13 @@ def boolean_expression_generator():
             break
         
         if output_values[-1] == '1':
-            linhas_resultado1.append(aux) #armazena as linhas em que a saída foi 1
+            linhas.append(aux) #armazena as linhas em que a saída foi 1
 
     # Analisa o elemento dentro da lista que contem as listas com a entrada de cada linha
-    if len(linhas_resultado1) == 0:
+    if len(linhas) == 0:
         print("\nNão foi possível gerar uma expressão booleana")
     else:
-        for lista in linhas_resultado1:
+        for lista in linhas:
             for elemento in range(3):
                 if lista[elemento] == 0: # vê se o elemento é 0, se for ele checa a posição da matriz em que o 0 está
                     if elemento == 0: 
