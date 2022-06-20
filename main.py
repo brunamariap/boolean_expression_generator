@@ -8,7 +8,7 @@ def boolean_expression_generator():
                       'C': [0, 1, 0, 1, 0, 1, 0, 1]}
 
     output_values = [] #lista para armazenar os valores de saída inseridos pelo usuário
-    linhas = []
+    linhas = [] #matriz para armazenar a lista de cada linha que resulta em 1
     boolean_enpression = ''
 
     print("=============================")
@@ -24,14 +24,15 @@ def boolean_expression_generator():
         output_values.append(input("  "))
         
         if validacao(output_values[-1]):
-            print("Entrada inválido!")
+            print("Entrada inválida!")
+            valid = False
             break
         
         if output_values[-1] == '1':
             linhas.append(aux) #armazena as linhas em que a saída foi 1
 
-    # Analisa o elemento dentro da lista que contem as listas com a entrada de cada linha
-    if len(linhas) == 0:
+    # Analisa o elemento dentro da lista que contêm as listas com a entrada de cada linha
+    if len(linhas) == 0 or valid == False:
         print("\nNão foi possível gerar uma expressão booleana")
     else:
         for lista in linhas:
