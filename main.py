@@ -7,7 +7,7 @@ def boolean_expression_generator():
                       'B': [0, 0, 1, 1, 0, 0, 1, 1],
                       'C': [0, 1, 0, 1, 0, 1, 0, 1]}
 
-    output_values = []
+    output_values = [] #lista para armazenar os valores de saída inseridos pelo usuário
     linhas = []
     boolean_enpression = ''
 
@@ -16,8 +16,7 @@ def boolean_expression_generator():
     print("  A  |  B  |  C  |  S")
     # estrutura de repetição que vai servir para imprimir a tabela
     for j in range(8): #serve para controlar os índices da listas dentro do dicionário
-        aux = [] # variável usada para armazenar o valor de cada uma das 3 variáveis
-        valores_saida = ' '
+        aux = [] # variável usada para armazenar o valor de cada uma das 3 variáveis de entrada
         for i in variable_value:
             print(' ', variable_value[i][j], end='  |')
             aux.append(variable_value[i][j])
