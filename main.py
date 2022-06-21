@@ -10,6 +10,7 @@ def boolean_expression_generator():
     output_values = [] #lista para armazenar os valores de saída inseridos pelo usuário
     linhas = [] #matriz para armazenar a lista de cada linha que resulta em 1
     boolean_enpression = ''
+    valid = True
 
     print("=============================")
     print("   TABELA VERDADE")
