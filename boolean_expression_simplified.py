@@ -32,6 +32,7 @@ def implicantes_reduzidos(grupos_nums_1: dict, total_variaveis: int):
     mintermos_agrupados = []
     #criar listas com chaves chaves = list(grupos_nums_1.keys())
     chaves = list(grupos_nums_1.keys())
+    minterms = [] # lista para armazenar todos os minterms para depois contar o número de repetições
     print(chaves)
 
     for chave in grupos_nums_1:
@@ -69,11 +70,12 @@ def implicantes_reduzidos(grupos_nums_1: dict, total_variaveis: int):
     for indice, implicante_1 in enumerate(implicantes_primos): # pega o índice e os digitos do implicante primo dentro da lista
         if indice + 1 < len(implicantes_primos): # checa se o próximo índice existe
             for ind_outros_minterms in range(indice + 1,len(implicantes_primos)): #para comparar com os próximos implicantes
+                combinado_com_outro = False
                 num_diferencas = 0
                 indice_diferenca = 0
                 novo_minterm_agrupado = [] # guarda os mintermos temporariamente
                 for ind_implicante in range(total_variaveis): # iterador que permite percorrer todos os elementos de cada 
-                    if implicante_1[ind_implicante] != implicantes_primos[ind_outros_minterms][ind_implicante]: #compara o primeiro implicante com os outros implicantes da lista
+                    if implicante_1[ind_implicante] != implicantes_primos[ind_outros_minterms][ind_implicante]: #compara o primeiro implicante com os outros implicantes da lista para ver se eles conseguem combinar
                         num_diferencas += 1 
                         indice_diferenca = ind_implicante
                     
@@ -89,14 +91,20 @@ def implicantes_reduzidos(grupos_nums_1: dict, total_variaveis: int):
                     novo_minterm_agrupado.append(mintermos_agrupados[ind_outros_minterms])
                     print(novo_minterm_agrupado)
                     novos_mintermos_agrupados.append(novo_minterm_agrupado)
+
+                elif num_diferencas > 1: #deve checar se não tem nenhuma diferença, pois esse ainda é um implicante primo
+                    novos_mintermos_agrupados.append(mintermos_agrupados[indice])
+                    novos_implicantes.append(implicante_1)
     
     print(novos_implicantes)
     print(novos_mintermos_agrupados)
     return novos_implicantes, novos_mintermos_agrupados
 
-
 def primos_essenciais(implicantes_primos: list, mintermos: list):
     implicantes_primos_essenciais = []
-    for i in mintermos:
-        for j in i:
-            pass
+    for g4_minterm in mintermos:
+        num_repeticoes = 0
+        for g2_minterm in g4_minterm:
+            for dig_inicial in range(2):
+                if g2_minterm[dig_inicial]:
+                    pass
