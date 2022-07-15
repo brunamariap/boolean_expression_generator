@@ -1,8 +1,4 @@
-# contar o núemero de vezes que um digito é igual em mintermos
-# lembrar de sempre comparar os min terms com os minterms que estão num grupo com mais 1s
-
-
-def separar_minterms(result_1, minterms):
+def separar_minterms(result_1):
 
     # Dicionário com os grupos de mintermos
     t_nums_1s = {'0': [], '1': [], '2': [], '3': [], '4': []}
@@ -32,24 +28,37 @@ def separar_minterms(result_1, minterms):
 
 def primeiros_implicantes_reduzidos(grupos_nums_1, total_variaveis):
     implicantes_primos = []
+    mintermos_agrupados = []
+    #criar listas com chaves chaves = list(grupos_nums_1.keys())
+    chaves = list(grupos_nums_1.keys())
+    print(chaves)
+
     for chave in grupos_nums_1:
+        if len(grupos_nums_1[chave]) > 0: # checa se o grupo não está vazio
+            
+            for minterm_1 in grupos_nums_1[chave]:
+                """ print("min 1:", minterm_1) """
+                
+                if int(chave) + 1 < total_variaveis: #checa se não está num índice que não existe
+                    if len(grupos_nums_1[str(int(chave) + 1)]) > 0: # checa se o próximo grupo não está vazio
+                        for minterm_2 in grupos_nums_1[str(int(chave) + 1)]: # compara com os minterms do próximo grupo
+                            """ print("min 2:", minterm_2) """
+                            num_diferencas = 0
+                            indice_diferenca = 0
+                            for digito in range(total_variaveis):
+                                if minterm_1[digito] != minterm_2[digito]:
+                                    num_diferencas += 1
+                                    indice_diferenca = digito
+                            if num_diferencas == 1:
+                                temp = list(minterm_1)
+                                temp[indice_diferenca] = '-'
+                                implicantes_primos.append(''.join(temp))
+    
+    print(implicantes_primos)
+    novos_implicantes = []
 
-        for minterm in grupos_nums_1[chave]:
-            print(minterm)
-
-            for other_min_control in range(int(chave) + 1, len(minterm)):
-                num_diferencas = 0
-                print(other_min_control)
-                for outro_min in range(len(grupos_nums_1[str(other_min_control)])):
-                    print(outro_min)
-                    for digito in range(0, len(minterm)):
-                        print(digito)
-                        print(minterm[digito])
-                        print(grupos_nums_1[str(other_min_control)][outro_min][digito])
-                        #print(grupos_nums_1[other_min_control][i = len(grupos_nums_1[other_min_control]) for i in range(len(grupos_nums_1[other_min_control]))][digito])
-                        if minterm[digito] != grupos_nums_1[str(other_min_control)][outro_min][digito]:
-                            num_diferencas += 1
-                    print(num_diferencas)
-
-
-
+    # para formar novos implicantes primos
+    for indice, implicante_1 in enumerate(implicantes_primos):
+        if indice + 1 < len(implicantes_primos):
+            for i in range(indice + 1,len(implicantes_primos)): #para comparar com os próximos implicantes
+                pass
