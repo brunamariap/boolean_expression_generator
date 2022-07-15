@@ -33,17 +33,17 @@ def implicantes_reduzidos(grupos_nums_1: dict, total_variaveis: int):
     #criar listas com chaves chaves = list(grupos_nums_1.keys())
     chaves = list(grupos_nums_1.keys())
     minterms = [] # lista para armazenar todos os minterms para depois contar o número de repetições
-    print(chaves)
+    #print(chaves)
 
     for chave in grupos_nums_1:
         if len(grupos_nums_1[chave]) > 0: # checa se o grupo não está vazio
             for minterm_1 in grupos_nums_1[chave]:
                 """ print("min 1:", minterm_1) """
-                
                 if int(chave) + 1 <= total_variaveis: #checa se não está num índice que não existe
                     if len(grupos_nums_1[str(int(chave) + 1)]) > 0: # checa se o próximo grupo não está vazio
                         for minterm_2 in grupos_nums_1[str(int(chave) + 1)]: # compara com os minterms do próximo grupo
                             """ print("min 2:", minterm_2) """
+                            num_combinacoes = 0
                             minterm_agrupado = []
                             num_diferencas = 0
                             indice_diferenca = 0
@@ -56,11 +56,16 @@ def implicantes_reduzidos(grupos_nums_1: dict, total_variaveis: int):
                             if num_diferencas == 1: 
                                 temp = list(minterm_1) #variável que armazena o mintermo temporariamente em formato de lista 
                                 temp[indice_diferenca] = '-' #modifica o digito que está se alterando nos mintermos
+                                num_combinacoes += 1
                                 implicantes_primos.append(''.join(temp))
                                 minterm_agrupado.append(int(minterm_1, 2))
                                 minterm_agrupado.append(int(minterm_2, 2))
                                 mintermos_agrupados.append(minterm_agrupado)
-    
+                    
+                if num_combinacoes == 0:
+                    implicantes_primos.append(minterm_1)
+                    mintermos_agrupados.append(int(minterm_1, 2))
+
     print(mintermos_agrupados)
     print(implicantes_primos)
     novos_implicantes = []
@@ -69,19 +74,24 @@ def implicantes_reduzidos(grupos_nums_1: dict, total_variaveis: int):
     # para formar novos implicantes primos
     for indice, implicante_1 in enumerate(implicantes_primos): # pega o índice e os digitos do implicante primo dentro da lista
         if indice + 1 < len(implicantes_primos): # checa se o próximo índice existe
+            num_combinacoes = 0 # número de vezes que aquele mintermo foi combinado
             for ind_outros_minterms in range(indice + 1,len(implicantes_primos)): #para comparar com os próximos implicantes
-                combinado_com_outro = False
                 num_diferencas = 0
                 indice_diferenca = 0
                 novo_minterm_agrupado = [] # guarda os mintermos temporariamente
+                
                 for ind_implicante in range(total_variaveis): # iterador que permite percorrer todos os elementos de cada 
                     if implicante_1[ind_implicante] != implicantes_primos[ind_outros_minterms][ind_implicante]: #compara o primeiro implicante com os outros implicantes da lista para ver se eles conseguem combinar
                         num_diferencas += 1 
                         indice_diferenca = ind_implicante
+
+                        if num_diferencas > 1:
+                            break
                     
                 if num_diferencas == 1: # checa se o total de diferenças é apenas 1
                     temp = list(implicante_1)
                     temp[indice_diferenca] = '-'
+                    num_combinacoes += 1
                     novos_implicantes.append(''.join(temp))
                     """ for x in [mintermos_agrupados[indice], mintermos_agrupados[ind_outros_minterms]]: #pega o mintermo que está numa matriz
                         print(x)
@@ -91,10 +101,9 @@ def implicantes_reduzidos(grupos_nums_1: dict, total_variaveis: int):
                     novo_minterm_agrupado.append(mintermos_agrupados[ind_outros_minterms])
                     print(novo_minterm_agrupado)
                     novos_mintermos_agrupados.append(novo_minterm_agrupado)
-
-                elif num_diferencas > 1: #deve checar se não tem nenhuma diferença, pois esse ainda é um implicante primo
-                    novos_mintermos_agrupados.append(mintermos_agrupados[indice])
-                    novos_implicantes.append(implicante_1)
+                
+            """ if num_combinacoes == 0:
+                novos_mintermos_agrupados.append(mintermos_agrupados[indice]) """
     
     print(novos_implicantes)
     print(novos_mintermos_agrupados)
