@@ -1,4 +1,4 @@
-def canonical_boolean_expression(result_1, alphabet):
+def canonical_boolean_expression(result_1: list, alphabet: list):
     """ Analisa o digito dentro da lista que contêm as listas com a entrada de cada linha"""
     boolean_expression = ''
     for linha in result_1:

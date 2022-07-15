@@ -2,7 +2,7 @@ from boolean_expression import canonical_boolean_expression
 from boolean_expression_simplified import *
 
 
-def validacao(caractere):  # verifica se o usuário digitou algum número diferente de 0 e 1
+def validacao(caractere: str):  # verifica se o usuário digitou algum número diferente de 0 e 1
     if caractere != '0' and caractere != '1':
         return True
 
@@ -65,4 +65,4 @@ def truth_table_input():
         else:
             canonical_boolean_expression(result_1, alphabet)
             grupos = separar_minterms(result_1)
-            primeiros_implicantes_reduzidos(grupos, num_variable)
+            implicantes_reduzidos(grupos, num_variable)
