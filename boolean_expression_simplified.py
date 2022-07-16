@@ -1,3 +1,6 @@
+from itertools import count
+
+
 def separar_minterms(result_1: list) -> dict:
     """ Separa os minterms"""
 
@@ -75,7 +78,7 @@ def implicantes_reduzidos(grupos_nums_1: dict, total_variaveis: int) -> dict:
                     if minterm not in usados: #vê quais foram os mintermos usado, se o mintermo não foi usado ele vai direto para o set de implicantes primos
                         implicantes_primos.add(minterm)
                         try:
-                            #implicantes_primos_mintermos[minterm] = [int(minterm, 2)] 
+                            implicantes_primos_mintermos[minterm] = [int(minterm, 2)] 
                             novos_implicantes_mintermos[minterm] = [int(minterm, 2)]
                         except:
                             novos_implicantes_mintermos[minterm] = implicantes_primos_mintermos[minterm]
@@ -95,16 +98,16 @@ def implicantes_reduzidos(grupos_nums_1: dict, total_variaveis: int) -> dict:
 
     return novos_implicantes_mintermos
 
-    # falta pegar o índice dos implicantes primos para contabilizar
-    # fazer um dícionário, com um implicante primo sendo a chave e os valores (que podem ser uma lista) serem os os mintermos que foram agrupados para formar aquela implicante
-    # quando for apagar os implicantes repetidos dentro do dicionário, fazer de forma parecida com o que foi feito com as chaves do dicionário de grupos
-    # ver se a função counter funciona para contar o número de chaves do dicionário e ver se apaga apenas 1 das chaves duplicadas
-
 
 def primos_essenciais(implicantes_primos: dict) -> list:
+    lista_aux = []
+    implicantes_primos_essenciais = []
     for lista_minterms in implicantes_primos.values():
-        print(lista_minterms)
-        cont = 0
-        for minterm in lista_minterms:
-            pass
-            """ for i in range() """
+        lista_aux.extend(lista_minterms) #lista para guardar os mintermos temporariamente
+    
+    for i in lista_aux:
+        cont = lista_aux.count(i)
+        if cont == 1:
+            implicantes_primos_essenciais.append(i)
+    
+    print(implicantes_primos_essenciais)
