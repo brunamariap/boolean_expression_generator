@@ -43,7 +43,7 @@ def truth_table_input():
             if j == num_variable - 1:
                 print('  S',)
 
-        for indice, linhas in enumerate(truth_table_lines):
+        for linhas in truth_table_lines:
             for digito in linhas:
                 print(' ', digito, end='  |')
 
@@ -55,10 +55,7 @@ def truth_table_input():
                 break
 
             if output_values[-1] == '1':
-                """ minterms.append(indice) """
                 result_1.append(linhas)  # armazena as linhas em que a saída foi 1
-        """ print(minterms)
-        print(result_1) """
 
         if len(result_1) == 0 or valid == False:
             print("\nNão foi possível gerar uma expressão booleana")
