@@ -62,4 +62,5 @@ def truth_table_input():
         else:
             canonical_boolean_expression(result_1, alphabet)
             grupos = separar_minterms(result_1)
-            implicantes_reduzidos(grupos, num_variable)
+            implicantes_primos = implicantes_reduzidos(grupos, num_variable)
+            primos_essenciais(implicantes_primos)

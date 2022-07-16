@@ -1,7 +1,4 @@
-from numpy import append
-
-
-def separar_minterms(result_1: list) -> list:
+def separar_minterms(result_1: list) -> dict:
     """ Separa os minterms"""
 
     # Dicionário com os grupos de mintermos
@@ -17,11 +14,11 @@ def separar_minterms(result_1: list) -> list:
                 cont_1s += 1
         grupos_nums_1[str(cont_1s)].append(linha)
     print(grupos_nums_1)
-    
+
     return grupos_nums_1
 
 
-def implicantes_reduzidos(grupos_nums_1: dict, total_variaveis: int): 
+def implicantes_reduzidos(grupos_nums_1: dict, total_variaveis: int) -> dict: 
     # Deleta grupos vazios 
     novos_grupos_1 = grupos_nums_1.copy() #dicionário cópia usado para percorrer o outro e apagar as chaves vazias
     implicantes_primos = set() 
@@ -75,8 +72,9 @@ def implicantes_reduzidos(grupos_nums_1: dict, total_variaveis: int):
                 for minterm in minterm_list: #acessa os mintermo que está entre os valores do dicionário
                     if minterm not in usados: #vê quais foram os mintermos usado, se o mintermo não foi usado ele vai direto para o set de implicantes primos
                         implicantes_primos.add(minterm)
-                        implicantes_primos_mintermos[minterm] = [int(minterm, 2)] 
-                        novos_implicantes_mintermos[minterm] = [int(minterm, 2)] #acho que poderia deixar só nessa, já que provavelmete vou usar só ela
+                        if cont_passagem == 1:
+                            implicantes_primos_mintermos[minterm] = [int(minterm, 2)] 
+                            novos_implicantes_mintermos[minterm] = [int(minterm, 2)] #acho que poderia deixar só nessa, já que provavelmete vou usar só ela
             grupos_nums_1 = novos_grupos_1.copy() #o grupo de números 1 será o grupo que tinha sido alterado anteriormente
             print(f'grupos_nums_1: {grupos_nums_1}') 
         else:    # se o grupo de usador estiver vazio, que é o caso de não haver nenhuma combinação
@@ -88,7 +86,9 @@ def implicantes_reduzidos(grupos_nums_1: dict, total_variaveis: int):
             print(f'implicantes_primos: {implicantes_primos}') 
             print(f'implicante e mintermos usados: {implicantes_primos_mintermos}')
             print(f'novos implicantes e mintermos usados: {novos_implicantes_mintermos}')
-            break 
+            break
+
+    return novos_implicantes_mintermos
 
     # falta pegar o índice dos implicantes primos para contabilizar
     # fazer um dícionário, com um implicante primo sendo a chave e os valores (que podem ser uma lista) serem os os mintermos que foram agrupados para formar aquela implicante
@@ -96,5 +96,8 @@ def implicantes_reduzidos(grupos_nums_1: dict, total_variaveis: int):
     # ver se a função counter funciona para contar o número de chaves do dicionário e ver se apaga apenas 1 das chaves duplicadas
 
 
-def primos_essenciais():
-    pass
+def primos_essenciais(implicantes_primos: dict) -> list:
+    for lista_minterms in implicantes_primos.values():
+        print(lista_minterms)
+        """ cont = 0
+        for minterm in lista_minterms """
