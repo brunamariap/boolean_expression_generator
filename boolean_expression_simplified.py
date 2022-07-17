@@ -20,7 +20,7 @@ def separar_minterms(result_1: list) -> dict:
     return grupos_nums_1
 
 
-def mintermos_representados(implicantes_primos_mintermos,implicante: str, cont_passagens: int, usados, mintermo_1, mintermo_2):
+def mintermos_representados(implicantes_primos_mintermos,implicante: str, cont_passagens: int, usados, mintermo_1, mintermo_2) -> dict:
     if usados:
         if cont_passagens == 1 and '-' not in implicante: #quando mintermo_1 não tem nenhum valor, seria o caso que entra apenas nos usados
             implicantes_primos_mintermos[implicante] = [int(implicante, 2)]
@@ -28,7 +28,6 @@ def mintermos_representados(implicantes_primos_mintermos,implicante: str, cont_p
             implicantes_primos_mintermos[implicante] = [int(mintermo_1, 2), int(mintermo_2, 2)]
 
     # mintermos que foram combinados para formar o novo implicante
-   
     if implicante not in implicantes_primos_mintermos:
             for minter in [implicantes_primos_mintermos[mintermo_1], implicantes_primos_mintermos[mintermo_2]]:
                 try:
@@ -39,7 +38,7 @@ def mintermos_representados(implicantes_primos_mintermos,implicante: str, cont_p
     return implicantes_primos_mintermos
 
 
-def implicantes_reduzidos(grupos_nums_1: dict, total_variaveis: int): 
+def implicantes_reduzidos(grupos_nums_1: dict, total_variaveis: int) -> dict: 
     # Deleta grupos vazios 
     novos_grupos_1 = grupos_nums_1.copy() 
     implicantes_primos = set() 
@@ -77,7 +76,6 @@ def implicantes_reduzidos(grupos_nums_1: dict, total_variaveis: int):
                             novos_grupos_1[chaves[i]] = [aux] 
                         usados.update([mintermo_1, mintermo_2])
                         minterm_representado.update(mintermos_representados(minterm_representado, aux, cont_passagens, usados, mintermo_1, mintermo_2))
-        print(minterm_representado)
      
         if usados: 
             for minterm_list in grupos_nums_1.values(): 
@@ -95,13 +93,10 @@ def implicantes_reduzidos(grupos_nums_1: dict, total_variaveis: int):
             implicantes_primos.update(lista_implicantes_primos) 
             print(f'implicantes_primos: {implicantes_primos}')
 
-            for chave in minterm_representado:
-                if chave in implicantes_primos:
-                    implicantes_mintermos[chave] = [].extend(minterm_representado[chave])
-            """ for minterm in implicantes_primos:
+            for minterm in implicantes_primos:
                 for chave in minterm_representado:
                     if minterm == chave:
-                        implicantes_mintermos[chave] = [].extend(minterm_representado[chave]) """
+                        implicantes_mintermos[chave] = [x for x in minterm_representado[chave]]
 
             print(implicantes_mintermos) 
             break
@@ -111,14 +106,15 @@ def implicantes_reduzidos(grupos_nums_1: dict, total_variaveis: int):
     return implicantes_mintermos
 
 
-def primos_essenciais(implicantes_primos: dict) -> list:
+def primos_essenciais(implicantes_primos: dict):
     lista_aux = []
-    mintermos_essenciais = set()
-    implicantes_primos_essenc = {}
+    implicantes_primos_essenc = {} #lista com o implicante primos essenciais e quais mintermos ele representa
     implicantes_primos_essenciais = []
+
     for lista_minterms in implicantes_primos.values():
         lista_aux.extend(lista_minterms) #lista para guardar os mintermos temporariamente
     
+    #conta o número de repetições do mintermo
     for i in lista_aux:
         cont = lista_aux.count(i)
         if cont == 1:
@@ -128,35 +124,24 @@ def primos_essenciais(implicantes_primos: dict) -> list:
         for chave in implicantes_primos:
             for implicante in implicantes_primos[chave]:
                 if j == implicante:
-                    mintermos_essenciais.add(chave)
                     implicantes_primos_essenc[chave] = []
                     implicantes_primos_essenc[chave].extend(implicantes_primos[chave])
 
-    cobertos = {}
+    incobertos = {}
+    set_mintermos_cobertos = set()
     #checa se cobre todos os outros implicantes
-    for chave in implicantes_primos_essenc:
-        pass
+    for mintermos in implicantes_primos_essenc.values():
+        set_mintermos_cobertos.update(mintermos)
     
+    for chave in implicantes_primos:
+        for valor in implicantes_primos[chave]:
+            print(valor)
+            if valor not in set_mintermos_cobertos:
+                incobertos[chave] = implicantes_primos[chave]
+
+    print(set_mintermos_cobertos)
+    print(incobertos)
     print(implicantes_primos_essenc)
-    print(mintermos_essenciais)
     print(implicantes_primos_essenciais)
 
-    #checar se os implicantes primos cobrem todos os termos
-    return mintermos_essenciais
-
-
-def metodo_petrick():
-    pass
-
-
-def boolean_expression_minimizer(mintermos_essenciais: set, letras: list):
-    boolean_expression = ''
-    for minterm in mintermos_essenciais:
-        for indice, bit in enumerate(minterm):
-            if bit == '0':
-                boolean_expression += letras[indice] + "'"
-            elif bit == '1':
-                boolean_expression += letras[indice]
-        boolean_expression += " + "
-    
-    return boolean_expression[:-3]
+    return implicantes_primos_essenc.keys() #retorna os implicantes primos essenciais
