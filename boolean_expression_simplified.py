@@ -62,6 +62,7 @@ def implicantes_reduzidos(grupos_nums_1: dict, total_variaveis: int) -> dict:
                         usados.update([mintermo_1, mintermo_2]) #guarda quais mintermos já foram usados
                         try:
                                 implicantes_primos_mintermos[aux] = [int(mintermo_1, 2), int(mintermo_2, 2)]
+                                novos_implicantes_mintermos[aux] = [int(mintermo_1, 2), int(mintermo_2, 2)]
                         except ValueError:
                             if aux not in novos_implicantes_mintermos:
                                 for minter in [implicantes_primos_mintermos[mintermo_1], implicantes_primos_mintermos[mintermo_2]]:
@@ -79,7 +80,7 @@ def implicantes_reduzidos(grupos_nums_1: dict, total_variaveis: int) -> dict:
                         try:
                             implicantes_primos_mintermos[minterm] = [int(minterm, 2)] 
                             novos_implicantes_mintermos[minterm] = [int(minterm, 2)]
-                        except ValueError:
+                        except:
                             novos_implicantes_mintermos[minterm] = implicantes_primos_mintermos[minterm]
             grupos_nums_1 = novos_grupos_1.copy() #o grupo de números 1 será o grupo que tinha sido alterado anteriormente
             print(f'grupos_nums_1: {grupos_nums_1}') 
