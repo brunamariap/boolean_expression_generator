@@ -1,4 +1,4 @@
-from truth_table import truth_table_input, validacao
+from truth_table import truth_table_input
 
 
 if __name__ == "__main__":

@@ -21,7 +21,8 @@ def separar_minterms(result_1: list) -> dict:
     return grupos_nums_1
 
 
-def mintermos_representados(implicantes_primos_mintermos,implicante: str, cont_passagens: int, usados, mintermo_1, mintermo_2) -> dict:
+def mintermos_representados(implicantes_primos_mintermos: dict, implicante: str, cont_passagens: int, usados: set, mintermo_1:
+    str, mintermo_2: str) -> dict:
     if usados:
         if cont_passagens == 1 and '-' not in implicante: #quando mintermo_1 não tem nenhum valor, seria o caso que entra apenas nos usados
             implicantes_primos_mintermos[implicante] = [int(implicante, 2)]
@@ -39,12 +40,12 @@ def mintermos_representados(implicantes_primos_mintermos,implicante: str, cont_p
     return implicantes_primos_mintermos
 
 
-def implicantes_reduzidos(grupos_nums_1: dict, total_variaveis: int) -> dict: 
+def implicantes_reduzidos(grupos_nums_1: dict) -> dict: 
     # Deleta grupos vazios 
-    novos_grupos_1 = grupos_nums_1.copy() 
+    novos_grupos_1 = grupos_nums_1.copy() #dicionário cópia usado para percorrer o outro e apagar as chaves vazias
     implicantes_primos = set() 
     for key in novos_grupos_1:
-        if not novos_grupos_1[key]: 
+        if not novos_grupos_1[key]: # se a chave do dicionário estiver vazia
             grupos_nums_1.pop(key) 
 
     implicantes_mintermos = {}
@@ -56,13 +57,13 @@ def implicantes_reduzidos(grupos_nums_1: dict, total_variaveis: int) -> dict:
         usados = set() # armazena os mintermos que foram usados no agrupamento
         cont_passagens += 1
         chaves = list(grupos_nums_1.keys()) 
-        for i in range(len(chaves) - 1): 
-            for mintermo_1 in grupos_nums_1[chaves[i]]: 
-                for mintermo_2 in grupos_nums_1[chaves[i+1]]: 
+        for i in range(len(chaves) - 1): #vai até a penúltima chave do dicionário
+            for mintermo_1 in grupos_nums_1[chaves[i]]: # acessa cada mintermo dentro do primeiro grupo que vai ser analisado
+                for mintermo_2 in grupos_nums_1[chaves[i+1]]: # acessa cada mintermo do próximo grupo, vai até a última chave
                     qtd_diferencas = 0 
                     pos_diferenca = None 
-                    for j, digito in enumerate(zip(mintermo_1, mintermo_2)): 
-                        if digito[0] != digito[1]: 
+                    for j, bit in enumerate(zip(mintermo_1, mintermo_2)): #posição do que está sendo acessada dentro de cada mintermo e o que contém em cada indice dos mintermos
+                        if bit[0] != bit[1]: #só há 2 índices dentro da tupla do retorno da função
                             qtd_diferencas += 1 
                             pos_diferenca = j 
                             if qtd_diferencas > 1: 
@@ -72,28 +73,29 @@ def implicantes_reduzidos(grupos_nums_1: dict, total_variaveis: int) -> dict:
                         aux[pos_diferenca] = '-' 
                         aux = ''.join(aux) 
                         try: 
-                            novos_grupos_1[chaves[i]].append(aux)  
+                            novos_grupos_1[chaves[i]].append(aux) # tenta adicionar o mintermo alterado em um grupo a partir do índice da chave que está no for que percorre as chaves
                         except KeyError: 
-                            novos_grupos_1[chaves[i]] = [aux] 
+                            novos_grupos_1[chaves[i]] = [aux]  #guarda quais mintermos já foram usados
                         usados.update([mintermo_1, mintermo_2])
                         minterm_representado.update(mintermos_representados(minterm_representado, aux, cont_passagens, usados, mintermo_1, mintermo_2))
      
         if usados: 
-            for minterm_list in grupos_nums_1.values(): 
-                for minterm in minterm_list: 
-                    if minterm not in usados: 
+            for minterm_list in grupos_nums_1.values(): # acessa os valores do dicionário, no caso uma lista com os mintermos de cada grupo
+                for minterm in minterm_list: #acessa os mintermo que está entre os valores do dicionário
+                    if minterm not in usados: #vê quais foram os mintermos usado, se o mintermo não foi usado ele vai direto para o set de implicantes primos
                         implicantes_primos.add(minterm)
                         minterm_representado.update(mintermos_representados(minterm_representado, minterm, cont_passagens, usados, mintermo_1, mintermo_2)) 
             grupos_nums_1 = novos_grupos_1.copy() 
             print(f'grupos_nums_1: {grupos_nums_1}') 
-        else:    
+        else: # se o grupo de usado estiver vazio, que é o caso de não haver nenhuma (nova) combinação
             lista_implicantes_primos = [] 
-            for implicantes in grupos_nums_1.values(): 
+            for implicantes in grupos_nums_1.values(): # todos os valores que estão nos grupos e serão implicantes primos
                 lista_implicantes_primos.extend(implicantes) 
             print(f'lista_implicantes_primos: {lista_implicantes_primos}') 
             implicantes_primos.update(lista_implicantes_primos) 
             print(f'implicantes_primos: {implicantes_primos}')
 
+            # de acordo os valores que estão dentro do set de implicantes primos, procura as chaves do dicionário que correspondem ao valor que está no set e adiciona em um novo dicionário
             for minterm in implicantes_primos:
                 for chave in minterm_representado:
                     if minterm == chave:
@@ -132,11 +134,13 @@ def primos_essenciais(implicantes_primos: dict):
     for mintermos in implicantes_primos_essenc.values():
         set_mintermos_cobertos.update(mintermos)
     
+    # checa quais implicantes estão "incobertos"
     for chave in implicantes_primos:
         for valor in implicantes_primos[chave]:
             if valor not in set_mintermos_cobertos:
                 incobertos[chave] = implicantes_primos[chave]
-
+                incobertos[chave] = [x for x in incobertos[chave] if x not in set_mintermos_cobertos] # list comprehensions
+    
     print(set_mintermos_cobertos)
     print(incobertos)
     print(implicantes_primos_essenc)
