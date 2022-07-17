@@ -3,8 +3,8 @@ from boolean_expression_simplified import *
 from boolean_expression import canonical_boolean_expression
 
 
-def validacao(caractere: str):  # verifica se o usuário digitou algum número diferente de 0 e 1
-    if caractere != '0' and caractere != '1':
+def validacao(bit: str):  # verifica se o usuário digitou algum número diferente de 0 e 1
+    if bit != '0' and bit != '1':
         return True
 
 
@@ -16,7 +16,7 @@ def truth_table_input():
         print('Não é possível gerar uma tabela verdade')
 
     else:
-        alphabet = ['A', 'B', 'C', 'D']
+        letras = ['A', 'B', 'C', 'D']
 
         truth_table_lines = []
         output_values = [] # lista para armazenar os valores de saída inseridos pelo usuário
@@ -41,7 +41,7 @@ def truth_table_input():
         print("=============================")
         print("   TABELA VERDADE")
         for j in range(num_variable):
-            print(' ', alphabet[j], end='  |')
+            print(' ', letras[j], end='  |')
             if j == num_variable - 1:
                 print('  S',)
 
@@ -62,8 +62,8 @@ def truth_table_input():
         if len(result_1) == 0 or valid == False:
             print("\nNão foi possível gerar uma expressão booleana")
         else:
-            canonical_boolean_expression(result_1, alphabet)
+            canonical_boolean_expression(result_1, letras)
             grupos = separar_minterms(result_1)
             implicantes_primos = implicantes_reduzidos(grupos, num_variable)
             mintermos_essenciais = primos_essenciais(implicantes_primos)
-            print("\nExpressão booleana na forma reduzida:", boolean_expression_minimizer(mintermos_essenciais, alphabet))
+            print("\nExpressão booleana na forma reduzida:", boolean_expression_minimizer(mintermos_essenciais, letras))

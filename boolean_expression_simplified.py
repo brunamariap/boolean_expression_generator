@@ -38,8 +38,8 @@ def implicantes_reduzidos(grupos_nums_1: dict, total_variaveis: int) -> dict:
         chaves = list(grupos_nums_1.keys()) 
         cont_passagem += 1 #conta quantas vezes o laço de repetição while iniciou
         for i in range(len(chaves) - 1): # para percorrer até a penúltima chave
-            if cont_passagem > 2:
-                break
+            """ if cont_passagem > 2:
+                break """
             for mintermo_1 in grupos_nums_1[chaves[i]]: # acessa cada mintermo dentro do primeiro grupo que vai ser analisado
                 for mintermo_2 in grupos_nums_1[chaves[i+1]]: # acessa cada mintermo do próximo grupo, vai até a última chave
                     qtd_diferencas = 0 
@@ -60,10 +60,10 @@ def implicantes_reduzidos(grupos_nums_1: dict, total_variaveis: int) -> dict:
                             novos_grupos_1[chaves[i]] = [aux] # se o grupo não estiver criado, vai criar um grupo pra adicionar a chave
         
                         usados.update([mintermo_1, mintermo_2]) #guarda quais mintermos já foram usados
-                        try:
+                        if cont_passagem == 1:
                                 implicantes_primos_mintermos[aux] = [int(mintermo_1, 2), int(mintermo_2, 2)]
-                                novos_implicantes_mintermos[aux] = [int(mintermo_1, 2), int(mintermo_2, 2)]
-                        except ValueError:
+                                #novos_implicantes_mintermos[aux] = [int(mintermo_1, 2), int(mintermo_2, 2)]
+                        elif cont_passagem > 1:
                             if aux not in novos_implicantes_mintermos:
                                 for minter in [implicantes_primos_mintermos[mintermo_1], implicantes_primos_mintermos[mintermo_2]]:
                                     try:
@@ -71,27 +71,34 @@ def implicantes_reduzidos(grupos_nums_1: dict, total_variaveis: int) -> dict:
                                     except KeyError:
                                         novos_implicantes_mintermos[aux] = [minter[0]]
                                         novos_implicantes_mintermos[aux].append(minter[1])
+                                    
+                        if cont_passagem > 2:
+                            if mintermo_1 and mintermo_2 in implicantes_primos_mintermos.keys():
+                                print('entrou')
+                                novos_implicantes_mintermos.pop(mintermo_1)
+                                novos_implicantes_mintermos.pop(mintermo_2)
+                                novos_implicantes_mintermos[aux] = []
         
         if usados: 
             for minterm_list in grupos_nums_1.values(): # acessa os valores do dicionário
                 for minterm in minterm_list: #acessa os mintermo que está entre os valores do dicionário
                     if minterm not in usados: #vê quais foram os mintermos usado, se o mintermo não foi usado ele vai direto para o set de implicantes primos
                         implicantes_primos.add(minterm)
-                        try:
+                        if '-' not in minterm:
                             implicantes_primos_mintermos[minterm] = [int(minterm, 2)] 
                             novos_implicantes_mintermos[minterm] = [int(minterm, 2)]
-                        except:
+                        else:
                             novos_implicantes_mintermos[minterm] = implicantes_primos_mintermos[minterm]
             grupos_nums_1 = novos_grupos_1.copy() #o grupo de números 1 será o grupo que tinha sido alterado anteriormente
             print(f'grupos_nums_1: {grupos_nums_1}') 
 
         else:    # se o grupo de usador estiver vazio, que é o caso de não haver nenhuma combinação
-            """ lista_implicantes_primos = [] 
-            for implicantes in grupos_nums_1.values(): # todos os valores que estão nos grupos de qs serão implicantes primos 
+            lista_implicantes_primos = [] 
+            for implicantes in grupos_nums_1.values(): # todos os valores que estão nos grupos de q serão implicantes primos 
                 lista_implicantes_primos.extend(implicantes)
             print(f'lista_implicantes_primos: {lista_implicantes_primos}') 
             implicantes_primos.update(lista_implicantes_primos) # retira todas as repetições que podem ter dentro da lista
-            print(f'implicantes_primos: {implicantes_primos}')  """
+            print(f'implicantes_primos: {implicantes_primos}') 
             print(f'implicante e mintermos usados: {implicantes_primos_mintermos}')
             print(f'novos implicantes e mintermos usados: {novos_implicantes_mintermos}')
             break
@@ -102,6 +109,7 @@ def implicantes_reduzidos(grupos_nums_1: dict, total_variaveis: int) -> dict:
 def primos_essenciais(implicantes_primos: dict) -> list:
     lista_aux = []
     mintermos_essenciais = set()
+    implicantes_primos_essenc = {}
     implicantes_primos_essenciais = []
     for lista_minterms in implicantes_primos.values():
         lista_aux.extend(lista_minterms) #lista para guardar os mintermos temporariamente
@@ -116,20 +124,34 @@ def primos_essenciais(implicantes_primos: dict) -> list:
             for implicante in implicantes_primos[chave]:
                 if j == implicante:
                     mintermos_essenciais.add(chave)
+                    implicantes_primos_essenc[chave] = []
+                    implicantes_primos_essenc[chave].extend(implicantes_primos[chave])
 
+    cobertos = {}
+    #checa se cobre todos os outros implicantes
+    for chave in implicantes_primos_essenc:
+        pass
+    
+    print(implicantes_primos_essenc)
     print(mintermos_essenciais)
     print(implicantes_primos_essenciais)
+
+    #checar se os implicantes primos cobrem todos os termos
     return mintermos_essenciais
 
 
-def boolean_expression_minimizer(mintermos_essenciais: set, alphabet: list):
+def metodo_petrick():
+    pass
+
+
+def boolean_expression_minimizer(mintermos_essenciais: set, letras: list):
     boolean_expression = ''
     for minterm in mintermos_essenciais:
         for indice, bit in enumerate(minterm):
             if bit == '0':
-                boolean_expression += alphabet[indice] + "'"
+                boolean_expression += letras[indice] + "'"
             elif bit == '1':
-                boolean_expression += alphabet[indice]
+                boolean_expression += letras[indice]
         boolean_expression += " + "
     
     return boolean_expression[:-3]
