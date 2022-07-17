@@ -70,7 +70,7 @@ def implicantes_reduzidos(grupos_nums_1: dict, total_variaveis: int) -> dict:
                                         novos_implicantes_mintermos[aux].extend(minter)
                                     except KeyError:
                                         novos_implicantes_mintermos[aux] = [minter[0]]
-                                        novos_implicantes_mintermos[aux].append(minter[1])
+                                        novos_implicantes_mintermos[aux].extend(minter[0:])
                                     
                         if cont_passagem > 2:
                             if mintermo_1 and mintermo_2 in implicantes_primos_mintermos.keys():
