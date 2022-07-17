@@ -65,5 +65,5 @@ def truth_table_input():
             canonical_boolean_expression(result_1, letras)
             grupos = separar_minterms(result_1)
             implicantes_primos = implicantes_reduzidos(grupos, num_variable)
-            mintermos_essenciais = primos_essenciais(implicantes_primos)
-            print("\nExpressão booleana na forma reduzida:", boolean_expression_minimizer(mintermos_essenciais, letras))
+            #mintermos_essenciais = primos_essenciais(implicantes_primos)
+            #print("\nExpressão booleana na forma reduzida:", boolean_expression_minimizer(mintermos_essenciais, letras))
