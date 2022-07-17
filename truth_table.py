@@ -1,5 +1,6 @@
-from boolean_expression import canonical_boolean_expression
+import os
 from boolean_expression_simplified import *
+from boolean_expression import canonical_boolean_expression
 
 
 def validacao(caractere: str):  # verifica se o usuário digitou algum número diferente de 0 e 1
@@ -8,6 +9,7 @@ def validacao(caractere: str):  # verifica se o usuário digitou algum número d
 
 
 def truth_table_input():
+    #os.system("cls")
     num_variable = int(input('Digite o total de variáveis da tabela verdade: '))
 
     if num_variable < 2 or num_variable > 4:
@@ -63,4 +65,5 @@ def truth_table_input():
             canonical_boolean_expression(result_1, alphabet)
             grupos = separar_minterms(result_1)
             implicantes_primos = implicantes_reduzidos(grupos, num_variable)
-            primos_essenciais(implicantes_primos)
+            mintermos_essenciais = primos_essenciais(implicantes_primos)
+            print("\nExpressão booleana na forma reduzida:", boolean_expression_minimizer(mintermos_essenciais, alphabet))

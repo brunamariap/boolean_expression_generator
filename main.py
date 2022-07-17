@@ -1,4 +1,4 @@
-from expression_generator import *
+from truth_table import truth_table_input, validacao
 
 
 if __name__ == "__main__":

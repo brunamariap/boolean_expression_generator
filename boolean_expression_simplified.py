@@ -6,7 +6,6 @@ def separar_minterms(result_1: list) -> dict:
 
     # Dicionário com os grupos de mintermos
     grupos_nums_1 = {'0': [], '1': [], '2': [], '3': [], '4': []}
-    minterms_ordenados = []
 
     for linha in result_1:
         
@@ -63,7 +62,7 @@ def implicantes_reduzidos(grupos_nums_1: dict, total_variaveis: int) -> dict:
                         usados.update([mintermo_1, mintermo_2]) #guarda quais mintermos já foram usados
                         try:
                                 implicantes_primos_mintermos[aux] = [int(mintermo_1, 2), int(mintermo_2, 2)]
-                        except:
+                        except ValueError:
                             if aux not in novos_implicantes_mintermos:
                                 for minter in [implicantes_primos_mintermos[mintermo_1], implicantes_primos_mintermos[mintermo_2]]:
                                     try:
@@ -80,18 +79,18 @@ def implicantes_reduzidos(grupos_nums_1: dict, total_variaveis: int) -> dict:
                         try:
                             implicantes_primos_mintermos[minterm] = [int(minterm, 2)] 
                             novos_implicantes_mintermos[minterm] = [int(minterm, 2)]
-                        except:
+                        except ValueError:
                             novos_implicantes_mintermos[minterm] = implicantes_primos_mintermos[minterm]
             grupos_nums_1 = novos_grupos_1.copy() #o grupo de números 1 será o grupo que tinha sido alterado anteriormente
             print(f'grupos_nums_1: {grupos_nums_1}') 
 
         else:    # se o grupo de usador estiver vazio, que é o caso de não haver nenhuma combinação
-            lista_implicantes_primos = [] 
+            """ lista_implicantes_primos = [] 
             for implicantes in grupos_nums_1.values(): # todos os valores que estão nos grupos de qs serão implicantes primos 
                 lista_implicantes_primos.extend(implicantes)
             print(f'lista_implicantes_primos: {lista_implicantes_primos}') 
             implicantes_primos.update(lista_implicantes_primos) # retira todas as repetições que podem ter dentro da lista
-            print(f'implicantes_primos: {implicantes_primos}') 
+            print(f'implicantes_primos: {implicantes_primos}')  """
             print(f'implicante e mintermos usados: {implicantes_primos_mintermos}')
             print(f'novos implicantes e mintermos usados: {novos_implicantes_mintermos}')
             break
@@ -101,6 +100,7 @@ def implicantes_reduzidos(grupos_nums_1: dict, total_variaveis: int) -> dict:
 
 def primos_essenciais(implicantes_primos: dict) -> list:
     lista_aux = []
+    mintermos_essenciais = set()
     implicantes_primos_essenciais = []
     for lista_minterms in implicantes_primos.values():
         lista_aux.extend(lista_minterms) #lista para guardar os mintermos temporariamente
@@ -109,5 +109,26 @@ def primos_essenciais(implicantes_primos: dict) -> list:
         cont = lista_aux.count(i)
         if cont == 1:
             implicantes_primos_essenciais.append(i)
-    
+
+    for j in implicantes_primos_essenciais:
+        for chave in implicantes_primos:
+            for implicante in implicantes_primos[chave]:
+                if j == implicante:
+                    mintermos_essenciais.add(chave)
+
+    print(mintermos_essenciais)
     print(implicantes_primos_essenciais)
+    return mintermos_essenciais
+
+
+def boolean_expression_minimizer(mintermos_essenciais: set, alphabet: list):
+    boolean_expression = ''
+    for minterm in mintermos_essenciais:
+        for indice, bit in enumerate(minterm):
+            if bit == '0':
+                boolean_expression += alphabet[indice] + "'"
+            elif bit == '1':
+                boolean_expression += alphabet[indice]
+        boolean_expression += " + "
+    
+    return boolean_expression[:-3]
