@@ -1,4 +1,5 @@
-from itertools import count
+from metodo_petrick import *
+from boolean_expression import boolean_expression_minimizer
 
 
 def separar_minterms(result_1: list) -> dict:
@@ -100,16 +101,16 @@ def implicantes_reduzidos(grupos_nums_1: dict, total_variaveis: int) -> dict:
 
             print(implicantes_mintermos) 
             break
-
-        #percorrer o set em que estão os implicantes primos e procurar no dicionário em que estão todas as combinações e retornar para um novo dicionário, que será usado para tudo
     
     return implicantes_mintermos
 
 
 def primos_essenciais(implicantes_primos: dict):
     lista_aux = []
+    incobertos = {} # para armazenar os implicantes e os minntermos que não foram cobertos pelos implicantes primos essenciais
     implicantes_primos_essenc = {} #lista com o implicante primos essenciais e quais mintermos ele representa
-    implicantes_primos_essenciais = []
+    set_mintermos_cobertos = set()
+    lista_implicantes_primos_essenciais = []
 
     for lista_minterms in implicantes_primos.values():
         lista_aux.extend(lista_minterms) #lista para guardar os mintermos temporariamente
@@ -118,30 +119,30 @@ def primos_essenciais(implicantes_primos: dict):
     for i in lista_aux:
         cont = lista_aux.count(i)
         if cont == 1:
-            implicantes_primos_essenciais.append(i)
+            lista_implicantes_primos_essenciais.append(i)
 
-    for j in implicantes_primos_essenciais:
+    for j in lista_implicantes_primos_essenciais:
         for chave in implicantes_primos:
             for implicante in implicantes_primos[chave]:
                 if j == implicante:
                     implicantes_primos_essenc[chave] = []
                     implicantes_primos_essenc[chave].extend(implicantes_primos[chave])
 
-    incobertos = {}
-    set_mintermos_cobertos = set()
     #checa se cobre todos os outros implicantes
     for mintermos in implicantes_primos_essenc.values():
         set_mintermos_cobertos.update(mintermos)
     
     for chave in implicantes_primos:
         for valor in implicantes_primos[chave]:
-            print(valor)
             if valor not in set_mintermos_cobertos:
                 incobertos[chave] = implicantes_primos[chave]
 
     print(set_mintermos_cobertos)
     print(incobertos)
     print(implicantes_primos_essenc)
-    print(implicantes_primos_essenciais)
+    #print(lista_implicantes_primos_essenciais)
 
-    return implicantes_primos_essenc.keys() #retorna os implicantes primos essenciais
+    if incobertos: #chama o método de Petrick, mandar no mínimo, os implicantes primos essenciais e os incobertos
+        termos_petrick(incobertos, implicantes_primos_essenc)
+    else:
+        print("Expressão booleana na forma reduzida:", boolean_expression_minimizer(implicantes_primos_essenc.keys())) #retorna os implicantes primos essenciais

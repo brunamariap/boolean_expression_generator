@@ -13,8 +13,9 @@ def canonical_boolean_expression(result_1: list, letras: list):
     print("\nForma canônica da expressão booleana: ", boolean_expression[:-3], "\n")
 
 
-def boolean_expression_minimizer(mintermos_essenciais: set, letras: list):
+def boolean_expression_minimizer(mintermos_essenciais: set):
     boolean_expression = ''
+    letras = ['A', 'B', 'C', 'D']
     for minterm in mintermos_essenciais:
         for indice, bit in enumerate(minterm):
             if bit == '0':
