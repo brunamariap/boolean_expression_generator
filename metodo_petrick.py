@@ -37,13 +37,14 @@ def distributiva(equacao, letras_equacao):
     for i in range(len(equacao)):
         nova_equacao.append(list(equacao[i]))
     
-    """ for i in range(0,len(letras_equacao) - 1):
+    #teste de como seria a nova equação, mas a condição nunca é verdadeira
+    for i in range(0,len(letras_equacao) - 1):
 
         for j in range(i + 1, len(letras_equacao)):
             for letra in letras_equacao[j]:
                 print(letra)
                 if letras_equacao[i] == letra:
-                    nova_equacao2 += '(' + letras_equacao[i] + '+' + letras_equacao[i + 1] + letra + ')' """
+                    nova_equacao2 += '(' + letras_equacao[i] + '+' + letras_equacao[i + 1] + letra + ')'
 
     print(nova_equacao2)
     print(nova_equacao)
